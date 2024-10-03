@@ -27,6 +27,17 @@ const Formulario = () => {
     )
 
     if (nome.length >= 1) {
+      if (email && !email.includes('@')) {
+        return
+      }
+
+      if (!nome) {
+        return
+      }
+
+      if (!email && !telefone) {
+        return
+      }
       navigate('/')
     }
   }
@@ -49,9 +60,11 @@ const Formulario = () => {
         />
         <Campo
           value={telefone}
-          onChange={({ target }) => setTelefone(target.value)}
+          onChange={({ target }) => setTelefone(target.value.replace(/\D/, ''))}
           type="tel"
           placeholder="Telefone"
+          min="0"
+          maxLength={14}
         />
         <BotaoSalvar type="submit">Cadastrar</BotaoSalvar>
       </Form>

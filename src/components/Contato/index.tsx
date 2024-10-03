@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-// import * as S from './styles'
+import * as S from './styles'
 import { remover, editar } from '../../store/reducers/contatos'
 import ContatoClass from '../../models/Contato'
-// import { Botao, BotaoSalvar } from '../../styles'
+import { Botao, BotaoSalvar } from '../../styles'
 
 export type Props = ContatoClass
 
@@ -33,6 +33,21 @@ const Contato = ({
   }
 
   function salvarEdicao() {
+    if (email && !email.includes('@')) {
+      alert('O e-mail deve conter "@"')
+      return
+    }
+
+    if (!nome) {
+      alert('O campo Nome é obrigatório.')
+      return
+    }
+
+    if (!email && !telefone) {
+      alert('Você deve preencher pelo menos um dos campos: E-mail ou Telefone.')
+      return
+    }
+
     dispatch(
       editar({
         id,
@@ -43,41 +58,51 @@ const Contato = ({
     )
     setEstaEditando(false)
   }
-
   return (
     <div>
       {estaEditando ? (
-        <>
-          <input
+        <S.Card>
+          <S.TagEditando
             value={nome}
             onChange={(evento) => setNome(evento.target.value)}
             placeholder="Nome Completo"
           />
-          <input
+          <S.TagEditando
             value={email}
+            type="email"
             onChange={(evento) => setEmail(evento.target.value)}
             placeholder="E-mail"
           />
-          <input
+          <S.TagEditando
             value={telefone}
-            onChange={(evento) => setTelefone(evento.target.value)}
+            type="tel"
+            onChange={(evento) =>
+              setTelefone(evento.target.value.replace(/\D/, ''))
+            }
             placeholder="Telefone"
+            maxLength={14}
           />
           <div>
-            <button onClick={salvarEdicao}>Salvar</button>
-            <button onClick={cancelarEdicao}>Cancelar</button>
+            <BotaoSalvar type="submit" onClick={salvarEdicao}>
+              Salvar
+            </BotaoSalvar>
+            <S.BotaoCancelarRemover onClick={cancelarEdicao}>
+              Cancelar
+            </S.BotaoCancelarRemover>
           </div>
-        </>
+        </S.Card>
       ) : (
-        <>
-          <span>{nome}</span>
-          <span>{email}</span>
-          <span>{telefone}</span>
+        <S.Card>
+          <S.Tag>{nome}</S.Tag>
+          <S.Tag>{email}</S.Tag>
+          <S.Tag>{telefone}</S.Tag>
           <div>
-            <button onClick={() => setEstaEditando(true)}>Editar</button>
-            <button onClick={() => dispatch(remover(id))}>Remover</button>
+            <Botao onClick={() => setEstaEditando(true)}>Editar</Botao>
+            <S.BotaoCancelarRemover onClick={() => dispatch(remover(id))}>
+              Remover
+            </S.BotaoCancelarRemover>
           </div>
-        </>
+        </S.Card>
       )}
     </div>
   )
