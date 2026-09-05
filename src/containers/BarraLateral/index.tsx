@@ -27,7 +27,7 @@ const BarraLateral = ({ mostrarFiltros }: Props) => {
           />
         ) : (
           <Botao onClick={() => navigate('/')} type="button">
-            Voltar à lista de contatos
+            Voltar à lista de contatos.
           </Botao>
         )}
       </div>
